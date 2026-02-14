@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DartsCounter.ViewModels"
+             x:Class="DartsCounter.Views.DisplayPage"
+             BackgroundColor="#1a1a1a"
+             Title="Scoreboard">
+
+    <ContentPage.BindingContext>
+        <vm:GameViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="20">
+        
+        <!-- Header -->
+        <Label Text="501 DOUBLE OUT" 
+               TextColor="Gold" 
+               FontSize="32" 
+               HorizontalOptions="Center" 
+               FontAttributes="Bold" />
+
+        <!-- Main Score Display -->
+        <VerticalStackLayout Grid.Row="1" VerticalOptions="Center" Spacing="20">
+            <Label Text="{Binding CurrentPlayer.Name}" 
+                   TextColor="White" 
+                   FontSize="60" 
+                   HorizontalOptions="Center" />
+            
+            <Label Text="{Binding CurrentPlayer.CurrentScore}" 
+                   TextColor="LimeGreen" 
+                   FontSize="150" 
+                   HorizontalOptions="Center" 
+                   FontAttributes="Bold" />
+        </VerticalStackLayout>
+
+        <!-- Player List / Summary -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Players}" HeightRequest="150">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#333" BorderColor="Gray" Padding="10" WidthRequest="150">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" TextColor="White" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="{Binding CurrentScore}" TextColor="LightGray" FontSize="24" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

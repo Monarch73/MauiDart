@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DartsCounter.ViewModels"
+             xmlns:converters="clr-namespace:DartsCounter.Converters"
+             x:Class="DartsCounter.Views.ControllerPage"
+             Title="Darts Controller (Windows)">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:MultiplierToColorConverter x:Key="MultiplierToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <vm:GameViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+            
+            <HorizontalStackLayout Spacing="10">
+                <Entry x:Name="PlayerNameEntry" Placeholder="Player Name" WidthRequest="200" />
+                <Button Text="Add Player" Command="{Binding AddPlayerCommand}" CommandParameter="{Binding Source={x:Reference PlayerNameEntry}, Path=Text}" />
+            </HorizontalStackLayout>
+
+            <Label Text="{Binding CurrentPlayer.Name, StringFormat='Current Player: {0}'}" FontSize="24" FontAttributes="Bold" />
+            <Label Text="{Binding CurrentPlayer.CurrentScore, StringFormat='Remaining: {0}'}" FontSize="32" />
+            <Label Text="{Binding StatusMessage}" FontSize="18" TextColor="Gray" />
+
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Button Text="Single" Command="{Binding SetMultiplierCommand}" CommandParameter="1" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=1}" />
+                <Button Text="Double" Command="{Binding SetMultiplierCommand}" CommandParameter="2" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=2}" />
+                <Button Text="Triple" Command="{Binding SetMultiplierCommand}" CommandParameter="3" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=3}" />
+                <Button Text="Reset" Command="{Binding ResetCommand}" BackgroundColor="Red" />
+            </HorizontalStackLayout>
+
+            <FlexLayout Wrap="Wrap" JustifyContent="SpaceEvenly" AlignContent="Center">
+                <!-- Buttons 1-20 -->
+                <Button Text="1" Command="{Binding ScoreCommand}" CommandParameter="1" WidthRequest="60" />
+                <Button Text="2" Command="{Binding ScoreCommand}" CommandParameter="2" WidthRequest="60" />
+                <Button Text="3" Command="{Binding ScoreCommand}" CommandParameter="3" WidthRequest="60" />
+                <Button Text="4" Command="{Binding ScoreCommand}" CommandParameter="4" WidthRequest="60" />
+                <Button Text="5" Command="{Binding ScoreCommand}" CommandParameter="5" WidthRequest="60" />
+                <Button Text="6" Command="{Binding ScoreCommand}" CommandParameter="6" WidthRequest="60" />
+                <Button Text="7" Command="{Binding ScoreCommand}" CommandParameter="7" WidthRequest="60" />
+                <Button Text="8" Command="{Binding ScoreCommand}" CommandParameter="8" WidthRequest="60" />
+                <Button Text="9" Command="{Binding ScoreCommand}" CommandParameter="9" WidthRequest="60" />
+                <Button Text="10" Command="{Binding ScoreCommand}" CommandParameter="10" WidthRequest="60" />
+                <Button Text="11" Command="{Binding ScoreCommand}" CommandParameter="11" WidthRequest="60" />
+                <Button Text="12" Command="{Binding ScoreCommand}" CommandParameter="12" WidthRequest="60" />
+                <Button Text="13" Command="{Binding ScoreCommand}" CommandParameter="13" WidthRequest="60" />
+                <Button Text="14" Command="{Binding ScoreCommand}" CommandParameter="14" WidthRequest="60" />
+                <Button Text="15" Command="{Binding ScoreCommand}" CommandParameter="15" WidthRequest="60" />
+                <Button Text="16" Command="{Binding ScoreCommand}" CommandParameter="16" WidthRequest="60" />
+                <Button Text="17" Command="{Binding ScoreCommand}" CommandParameter="17" WidthRequest="60" />
+                <Button Text="18" Command="{Binding ScoreCommand}" CommandParameter="18" WidthRequest="60" />
+                <Button Text="19" Command="{Binding ScoreCommand}" CommandParameter="19" WidthRequest="60" />
+                <Button Text="20" Command="{Binding ScoreCommand}" CommandParameter="20" WidthRequest="60" />
+                <Button Text="25" Command="{Binding ScoreCommand}" CommandParameter="25" WidthRequest="60" />
+                <Button Text="0 (Miss)" Command="{Binding ScoreCommand}" CommandParameter="0" WidthRequest="100" />
+            </FlexLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
