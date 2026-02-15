@@ -30,6 +30,7 @@
             <!-- Current Player Info -->
             <Label Text="{Binding CurrentPlayer.Name, StringFormat='Current Player: {0}'}" FontSize="24" FontAttributes="Bold" />
             <Label Text="{Binding CurrentPlayer.CurrentScore, StringFormat='Remaining: {0}'}" FontSize="32" />
+            <Label Text="{Binding DartsThrown, StringFormat='Darts Thrown: {0}/3'}" FontSize="18" TextColor="LightGreen" />
             <Label Text="{Binding StatusMessage}" FontSize="18" TextColor="Gray" />
 
             <!-- Multiplier and Reset Controls -->
@@ -93,6 +94,19 @@
                 <Button Text="Bull" Command="{Binding ScoreCommand}" CommandParameter="25" Padding="15,10" />
                 <Button Text="0 (Miss)" Command="{Binding ScoreCommand}" CommandParameter="0" Padding="15,10" />
             </HorizontalStackLayout>
+
+            <!-- Player List / Summary -->
+            <Label Text="Players" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0" />
+            <CollectionView ItemsSource="{Binding Players}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, Auto" Padding="10">
+                            <Label Text="{Binding Name}" FontSize="18" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding CurrentScore}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </VerticalStackLayout>
     </ScrollView>

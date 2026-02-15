@@ -31,6 +31,11 @@
                    FontSize="150" 
                    HorizontalOptions="Center" 
                    FontAttributes="Bold" />
+
+            <Label Text="{Binding DartsThrown, StringFormat='DARTS: {0}'}" 
+                   TextColor="Gold" 
+                   FontSize="40" 
+                   HorizontalOptions="Center" />
         </VerticalStackLayout>
 
         <!-- Player List / Summary -->

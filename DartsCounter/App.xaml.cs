@@ -11,7 +11,14 @@ public partial class App : Application
 	{
 		if (DeviceInfo.Platform == DevicePlatform.WinUI)
 		{
-			return new Window(new NavigationPage(new Views.ControllerPage()));
+			var window = new Window(new NavigationPage(new Views.ControllerPage()));
+			
+			// Set height to full screen resolution height
+			var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+			window.Height = displayInfo.Height / displayInfo.Density;
+			window.Y = 0; // Position at the top
+
+			return window;
 		}
 		else
 		{

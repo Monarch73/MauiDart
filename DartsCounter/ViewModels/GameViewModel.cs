@@ -24,6 +24,15 @@ namespace DartsCounter.ViewModels
             set { _multiplier = value; OnPropertyChanged(); }
         }
 
+        private int _dartsThrown = 0;
+        public int DartsThrown
+        {
+            get => _dartsThrown;
+            set { _dartsThrown = value; OnPropertyChanged(); }
+        }
+
+        private int _scoreAtStartOfTurn;
+
         private string _statusMessage = "Welcome!";
         public string StatusMessage
         {
@@ -41,7 +50,13 @@ namespace DartsCounter.ViewModels
         public GameViewModel()
         {
             AddPlayerCommand = new Command<string>(AddPlayer);
-            ScoreCommand = new Command<int>(RecordScore);
+            ScoreCommand = new Command<string>(s => 
+            {
+                if (int.TryParse(s, out int score))
+                {
+                    RecordScore(score);
+                }
+            });
             SetMultiplierCommand = new Command<string>(m => 
             {
                 if (int.TryParse(m, out int multiplier))
@@ -62,6 +77,8 @@ namespace DartsCounter.ViewModels
         {
             Players.Clear();
             CurrentPlayer = null;
+            DartsThrown = 0;
+            _scoreAtStartOfTurn = 501;
             StatusMessage = "Game Reset. Add players.";
             Broadcast();
         }
@@ -76,6 +93,7 @@ namespace DartsCounter.ViewModels
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     StatusMessage = state.StatusMessage;
+                    DartsThrown = state.DartsThrown;
                     // For simplicity, we just update the current player and score display
                     // In a full app, you would sync the entire list.
                     if (CurrentPlayer == null) CurrentPlayer = new Player(state.CurrentPlayerName);
@@ -94,7 +112,8 @@ namespace DartsCounter.ViewModels
                 {
                     CurrentPlayerName = CurrentPlayer?.Name ?? "None",
                     CurrentScore = CurrentPlayer?.CurrentScore ?? 501,
-                    StatusMessage = StatusMessage
+                    StatusMessage = StatusMessage,
+                    DartsThrown = DartsThrown
                 };
                 await _syncService.BroadcastState(dto);
             }
@@ -104,8 +123,13 @@ namespace DartsCounter.ViewModels
         {
             if (Players.Count < 8 && !string.IsNullOrWhiteSpace(name))
             {
-                Players.Add(new Player(name));
-                if (CurrentPlayer == null) CurrentPlayer = Players[0];
+                var player = new Player(name);
+                Players.Add(player);
+                if (CurrentPlayer == null) 
+                {
+                    CurrentPlayer = player;
+                    _scoreAtStartOfTurn = player.CurrentScore;
+                }
                 Broadcast();
             }
         }
@@ -114,31 +138,49 @@ namespace DartsCounter.ViewModels
         {
             if (CurrentPlayer == null) return;
 
+            DartsThrown++;
             int points = value * Multiplier;
             int newScore = CurrentPlayer.CurrentScore - points;
+
+            bool isBust = false;
+            bool isWin = false;
 
             if (newScore == 0)
             {
                 if (Multiplier == 2)
                 {
+                    isWin = true;
                     StatusMessage = $"{CurrentPlayer.Name} wins!";
                     CurrentPlayer.CurrentScore = 0;
                 }
                 else
                 {
+                    isBust = true;
                     StatusMessage = "Bust! (Double needed)";
-                    NextTurn();
                 }
             }
             else if (newScore < 2)
             {
+                isBust = true;
                 StatusMessage = "Bust!";
-                NextTurn();
             }
             else
             {
                 CurrentPlayer.CurrentScore = newScore;
                 StatusMessage = $"{CurrentPlayer.Name} scored {points}";
+            }
+
+            if (isWin)
+            {
+                // For now, we stay on the winning player.
+            }
+            else if (isBust)
+            {
+                CurrentPlayer.CurrentScore = _scoreAtStartOfTurn;
+                NextTurn();
+            }
+            else if (DartsThrown == 3)
+            {
                 NextTurn();
             }
             
@@ -151,6 +193,7 @@ namespace DartsCounter.ViewModels
             public string CurrentPlayerName { get; set; } = string.Empty;
             public int CurrentScore { get; set; }
             public string StatusMessage { get; set; } = string.Empty;
+            public int DartsThrown { get; set; }
         }
 
         private void NextTurn()
@@ -159,6 +202,8 @@ namespace DartsCounter.ViewModels
             int index = Players.IndexOf(CurrentPlayer);
             index = (index + 1) % Players.Count;
             CurrentPlayer = Players[index];
+            _scoreAtStartOfTurn = CurrentPlayer.CurrentScore;
+            DartsThrown = 0;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
