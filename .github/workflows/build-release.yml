@@ -52,7 +52,7 @@ jobs:
 
       - name: Copy Windows binaries
         run: |
-          xcopy "DartsCounter\bin\Release\net9.0-windows10.0.26100.0\windows\*" "build-artifacts\windows\" /E /I
+          xcopy "DartsCounter\bin\Release\net9.0-windows10.0.26100.0\win10-x64\publish\*" "build-artifacts\windows\" /E /I
 
       - name: Copy Android binaries
         run: |
