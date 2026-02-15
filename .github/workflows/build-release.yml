@@ -1,0 +1,73 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+env:
+  DOTNET_VERSION: '9.0.x'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore DartsCounter/DartsCounter.csproj
+
+      - name: Build Windows
+        run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-windows10.0.26100.0 -c Release
+
+      - name: Build Android
+        run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-android -c Release
+
+      - name: Create output directories
+        run: |
+          mkdir -p build-artifacts/windows
+          mkdir -p build-artifacts/android
+
+      - name: Copy Windows binaries
+        run: |
+          xcopy "DartsCounter\bin\Release\net9.0-windows10.0.26100.0\windows\*" "build-artifacts\windows\" /E /I
+
+      - name: Copy Android binaries
+        run: |
+          xcopy "DartsCounter\bin\Release\net9.0-android\*" "build-artifacts\android\" /E /I
+
+      - name: Create release archive
+        shell: pwsh
+        run: |
+          Compress-Archive -Path build-artifacts -DestinationPath DartsCounter-${{ github.event.inputs.version }}.zip
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./DartsCounter-${{ github.event.inputs.version }}.zip
+          asset_name: DartsCounter-${{ github.event.inputs.version }}.zip
+          asset_content_type: application/zip
