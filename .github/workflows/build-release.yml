@@ -18,11 +18,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      
+      - name: Extract Keystore
+        shell: pwsh
+        run: |
+          $keystoreBytes = [System.Convert]::FromBase64String("${{ secrets.ANDROID_KEYSTORE_BASE64 }}")
+          [System.IO.File]::WriteAllBytes("${{ github.workspace }}/release.keystore", $keystoreBytes)
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+        
 
       - name: Restore dependencies
         run: dotnet restore DartsCounter/DartsCounter.csproj
@@ -31,7 +38,12 @@ jobs:
         run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-windows10.0.26100.0 -c Release
 
       - name: Build Android
-        run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-android -c Release
+        run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-android -c Release `
+          /p:AndroidKeyStore=true `
+          /p:AndroidSigningKeyStore="${{ github.workspace }}/release.keystore" `
+          /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_PASSWORD }}" `
+          /p:AndroidSigningKeyAlias="${{ secrets.KEY_ALIAS }}" `
+          /p:AndroidSigningKeyPass="${{ secrets.KEY_PASSWORD }}"
 
       - name: Create output directories
         run: |
