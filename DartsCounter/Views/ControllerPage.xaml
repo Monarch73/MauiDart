@@ -9,6 +9,8 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:MultiplierToColorConverter x:Key="MultiplierToColorConverter" />
+            <converters:MultiplierToBorderThicknessConverter x:Key="MultiplierToBorderThicknessConverter" />
+            <converters:MultiplierToBorderColorConverter x:Key="MultiplierToBorderColorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -18,48 +20,79 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20">
-            
+
+            <!-- Player Setup Section -->
             <HorizontalStackLayout Spacing="10">
                 <Entry x:Name="PlayerNameEntry" Placeholder="Player Name" WidthRequest="200" />
                 <Button Text="Add Player" Command="{Binding AddPlayerCommand}" CommandParameter="{Binding Source={x:Reference PlayerNameEntry}, Path=Text}" />
             </HorizontalStackLayout>
 
+            <!-- Current Player Info -->
             <Label Text="{Binding CurrentPlayer.Name, StringFormat='Current Player: {0}'}" FontSize="24" FontAttributes="Bold" />
             <Label Text="{Binding CurrentPlayer.CurrentScore, StringFormat='Remaining: {0}'}" FontSize="32" />
             <Label Text="{Binding StatusMessage}" FontSize="18" TextColor="Gray" />
 
+            <!-- Multiplier and Reset Controls -->
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Button Text="Single" Command="{Binding SetMultiplierCommand}" CommandParameter="1" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=1}" />
-                <Button Text="Double" Command="{Binding SetMultiplierCommand}" CommandParameter="2" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=2}" />
-                <Button Text="Triple" Command="{Binding SetMultiplierCommand}" CommandParameter="3" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=3}" />
-                <Button Text="Reset" Command="{Binding ResetCommand}" BackgroundColor="Red" />
+                <Border StrokeThickness="{Binding Multiplier, Converter={StaticResource MultiplierToBorderThicknessConverter}, ConverterParameter=1}" 
+                        Stroke="{Binding Multiplier, Converter={StaticResource MultiplierToBorderColorConverter}, ConverterParameter=1}"
+                        Padding="5">
+                    <Button Text="Single" Command="{Binding SetMultiplierCommand}" CommandParameter="1" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=1}" Padding="10" />
+                </Border>
+
+                <Border StrokeThickness="{Binding Multiplier, Converter={StaticResource MultiplierToBorderThicknessConverter}, ConverterParameter=2}" 
+                        Stroke="{Binding Multiplier, Converter={StaticResource MultiplierToBorderColorConverter}, ConverterParameter=2}"
+                        Padding="5">
+                    <Button Text="Double" Command="{Binding SetMultiplierCommand}" CommandParameter="2" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=2}" Padding="10" />
+                </Border>
+
+                <Border StrokeThickness="{Binding Multiplier, Converter={StaticResource MultiplierToBorderThicknessConverter}, ConverterParameter=3}" 
+                        Stroke="{Binding Multiplier, Converter={StaticResource MultiplierToBorderColorConverter}, ConverterParameter=3}"
+                        Padding="5">
+                    <Button Text="Triple" Command="{Binding SetMultiplierCommand}" CommandParameter="3" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=3}" Padding="10" />
+                </Border>
+
+                <Button Text="Reset" Command="{Binding ResetCommand}" BackgroundColor="Red" Padding="10" />
             </HorizontalStackLayout>
 
-            <FlexLayout Wrap="Wrap" JustifyContent="SpaceEvenly" AlignContent="Center">
-                <!-- Buttons 1-20 -->
-                <Button Text="1" Command="{Binding ScoreCommand}" CommandParameter="1" WidthRequest="60" />
-                <Button Text="2" Command="{Binding ScoreCommand}" CommandParameter="2" WidthRequest="60" />
-                <Button Text="3" Command="{Binding ScoreCommand}" CommandParameter="3" WidthRequest="60" />
-                <Button Text="4" Command="{Binding ScoreCommand}" CommandParameter="4" WidthRequest="60" />
-                <Button Text="5" Command="{Binding ScoreCommand}" CommandParameter="5" WidthRequest="60" />
-                <Button Text="6" Command="{Binding ScoreCommand}" CommandParameter="6" WidthRequest="60" />
-                <Button Text="7" Command="{Binding ScoreCommand}" CommandParameter="7" WidthRequest="60" />
-                <Button Text="8" Command="{Binding ScoreCommand}" CommandParameter="8" WidthRequest="60" />
-                <Button Text="9" Command="{Binding ScoreCommand}" CommandParameter="9" WidthRequest="60" />
-                <Button Text="10" Command="{Binding ScoreCommand}" CommandParameter="10" WidthRequest="60" />
-                <Button Text="11" Command="{Binding ScoreCommand}" CommandParameter="11" WidthRequest="60" />
-                <Button Text="12" Command="{Binding ScoreCommand}" CommandParameter="12" WidthRequest="60" />
-                <Button Text="13" Command="{Binding ScoreCommand}" CommandParameter="13" WidthRequest="60" />
-                <Button Text="14" Command="{Binding ScoreCommand}" CommandParameter="14" WidthRequest="60" />
-                <Button Text="15" Command="{Binding ScoreCommand}" CommandParameter="15" WidthRequest="60" />
-                <Button Text="16" Command="{Binding ScoreCommand}" CommandParameter="16" WidthRequest="60" />
-                <Button Text="17" Command="{Binding ScoreCommand}" CommandParameter="17" WidthRequest="60" />
-                <Button Text="18" Command="{Binding ScoreCommand}" CommandParameter="18" WidthRequest="60" />
-                <Button Text="19" Command="{Binding ScoreCommand}" CommandParameter="19" WidthRequest="60" />
-                <Button Text="20" Command="{Binding ScoreCommand}" CommandParameter="20" WidthRequest="60" />
-                <Button Text="25" Command="{Binding ScoreCommand}" CommandParameter="25" WidthRequest="60" />
-                <Button Text="0 (Miss)" Command="{Binding ScoreCommand}" CommandParameter="0" WidthRequest="100" />
-            </FlexLayout>
+            <!-- Numbers Grid 1-20 -->
+            <Label Text="Score" FontSize="18" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="*,*,*,*" RowSpacing="8" ColumnSpacing="8">
+                <!-- Row 1: 1-5 -->
+                <Button Grid.Row="0" Grid.Column="0" Text="1" Command="{Binding ScoreCommand}" CommandParameter="1" />
+                <Button Grid.Row="0" Grid.Column="1" Text="2" Command="{Binding ScoreCommand}" CommandParameter="2" />
+                <Button Grid.Row="0" Grid.Column="2" Text="3" Command="{Binding ScoreCommand}" CommandParameter="3" />
+                <Button Grid.Row="0" Grid.Column="3" Text="4" Command="{Binding ScoreCommand}" CommandParameter="4" />
+                <Button Grid.Row="0" Grid.Column="4" Text="5" Command="{Binding ScoreCommand}" CommandParameter="5" />
+
+                <!-- Row 2: 6-10 -->
+                <Button Grid.Row="1" Grid.Column="0" Text="6" Command="{Binding ScoreCommand}" CommandParameter="6" />
+                <Button Grid.Row="1" Grid.Column="1" Text="7" Command="{Binding ScoreCommand}" CommandParameter="7" />
+                <Button Grid.Row="1" Grid.Column="2" Text="8" Command="{Binding ScoreCommand}" CommandParameter="8" />
+                <Button Grid.Row="1" Grid.Column="3" Text="9" Command="{Binding ScoreCommand}" CommandParameter="9" />
+                <Button Grid.Row="1" Grid.Column="4" Text="10" Command="{Binding ScoreCommand}" CommandParameter="10" />
+
+                <!-- Row 3: 11-15 -->
+                <Button Grid.Row="2" Grid.Column="0" Text="11" Command="{Binding ScoreCommand}" CommandParameter="11" />
+                <Button Grid.Row="2" Grid.Column="1" Text="12" Command="{Binding ScoreCommand}" CommandParameter="12" />
+                <Button Grid.Row="2" Grid.Column="2" Text="13" Command="{Binding ScoreCommand}" CommandParameter="13" />
+                <Button Grid.Row="2" Grid.Column="3" Text="14" Command="{Binding ScoreCommand}" CommandParameter="14" />
+                <Button Grid.Row="2" Grid.Column="4" Text="15" Command="{Binding ScoreCommand}" CommandParameter="15" />
+
+                <!-- Row 4: 16-20 -->
+                <Button Grid.Row="3" Grid.Column="0" Text="16" Command="{Binding ScoreCommand}" CommandParameter="16" />
+                <Button Grid.Row="3" Grid.Column="1" Text="17" Command="{Binding ScoreCommand}" CommandParameter="17" />
+                <Button Grid.Row="3" Grid.Column="2" Text="18" Command="{Binding ScoreCommand}" CommandParameter="18" />
+                <Button Grid.Row="3" Grid.Column="3" Text="19" Command="{Binding ScoreCommand}" CommandParameter="19" />
+                <Button Grid.Row="3" Grid.Column="4" Text="20" Command="{Binding ScoreCommand}" CommandParameter="20" />
+            </Grid>
+
+            <!-- Special Score Options -->
+            <Label Text="Special" FontSize="18" FontAttributes="Bold" />
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Button Text="Bull" Command="{Binding ScoreCommand}" CommandParameter="25" Padding="15,10" />
+                <Button Text="0 (Miss)" Command="{Binding ScoreCommand}" CommandParameter="0" Padding="15,10" />
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

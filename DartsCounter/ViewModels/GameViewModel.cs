@@ -42,7 +42,14 @@ namespace DartsCounter.ViewModels
         {
             AddPlayerCommand = new Command<string>(AddPlayer);
             ScoreCommand = new Command<int>(RecordScore);
-            SetMultiplierCommand = new Command<int>(m => Multiplier = m);
+            SetMultiplierCommand = new Command<string>(m => 
+            {
+                if (int.TryParse(m, out int multiplier))
+                {
+                    Multiplier = multiplier;
+                    System.Diagnostics.Debug.WriteLine($"Multiplier set to: {multiplier}");
+                }
+            });
             ResetCommand = new Command(ResetGame);
 
             if (DeviceInfo.Platform != DevicePlatform.WinUI)
