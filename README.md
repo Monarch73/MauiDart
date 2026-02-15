@@ -22,10 +22,10 @@ DartsCounter is designed to run on two distinct platforms simultaneously:
 ## ✨ Features
 
 ### Current Capabilities
-- **501 Double-Out Logic:** Automated score calculation with full support for "Bust" rules and mandatory double-out validation.
-- **Real-time Synchronization:** Uses `DartsSyncService` for low-latency UDP broadcasting across the local network (Port 50001).
-- **Multi-Player Support:** Add and manage up to 8 players in a single game.
-- **Dynamic UI:** Automatic role detection—Windows launches the Controller interface, while Android/iOS launches the Display interface.
+- **501 Double-Out Logic:** Automated score calculation with full support for **3-dart turns**, "Bust" rules (reverting to start-of-turn score), and mandatory double-out validation.
+- **Real-time Synchronization:** Uses `DartsSyncService` for low-latency UDP broadcasting across the local network (Port 50001), including turn progress.
+- **Multi-Player Support:** Add and manage up to 8 players with a live scoreboard on the Controller page.
+- **Dynamic UI:** Automatic role detection—Windows launches the Controller interface (full-height), while Android/iOS launches the Display interface.
 - **Score Multipliers:** Quick-toggle inputs for Single, Double, and Triple scores.
 
 ### Planned Features 🛠️
@@ -59,7 +59,7 @@ DartsCounter is designed to run on two distinct platforms simultaneously:
 ### 1. Windows (Controller)
 ```bash
 cd DartsCounter
-dotnet build -t:Run -f net9.0-windows10.0.19041.0
+dotnet build -t:Run -f net9.0-windows10.0.26100.0
 ```
 
 ### 2. Android (Display)

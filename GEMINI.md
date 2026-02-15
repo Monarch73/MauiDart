@@ -11,25 +11,25 @@ The two applications synchronize game state in real-time using UDP broadcasting 
 
 ## Key Features
 
-*   **501 Double-Out Logic:** Implements standard game rules, including bust detection and double-out validation.
-*   **Real-time Synchronization:** Uses `DartsSyncService` to broadcast game state (current player, score, status) via UDP from the Windows controller to Android displays.
+*   **501 Double-Out Logic:** Implements standard game rules, including three-dart turns, bust detection (reverting to start-of-turn score), and double-out validation.
+*   **Real-time Synchronization:** Uses `DartsSyncService` to broadcast game state (current player, score, status, and darts thrown) via UDP from the Windows controller to Android displays.
 *   **Multi-Platform UI:**
-    *   **Controller (Windows):** Inputs for single, double, triple scores (1-20, Bullseye), player management, and game reset.
-    *   **Display (Android):** Large, clear typography for current score and active player, plus a summary list of all players.
+    *   **Controller (Windows):** Inputs for single, double, triple scores (1-20, Bullseye), player management, turn progress tracking, real-time player list with scores, and game reset. Optimized for full-height display.
+    *   **Display (Android):** Large, clear typography for current score, active player, and darts thrown in current turn, plus a summary list of all players.
 
 ## Project Structure
 
 The solution follows a standard MVVM (Model-View-ViewModel) architecture:
 
 *   **`DartsCounter/`**: Root project directory.
-    *   **`Models/`**: Contains data entities like `Player.cs`.
-    *   **`ViewModels/`**: Contains `GameViewModel.cs`, which holds the game logic, state, and commands.
+    *   **`Models/`**: Contains data entities like `Player.cs` (implements `INotifyPropertyChanged`).
+    *   **`ViewModels/`**: Contains `GameViewModel.cs`, which holds the game logic, state, 3-dart turn management, and commands.
     *   **`Views/`**: Contains the UI definitions:
-        *   `ControllerPage.xaml`: Input interface for Windows.
-        *   `DisplayPage.xaml`: Scoreboard interface for Android.
+        *   `ControllerPage.xaml`: Input interface for Windows with turn tracking and player list.
+        *   `DisplayPage.xaml`: Scoreboard interface for Android with dart counter.
     *   **`Services/`**: Contains `DartsSyncService.cs` for UDP network communication.
     *   **`Converters/`**: UI value converters (e.g., `MultiplierToColorConverter.cs`).
-    *   **`App.xaml.cs`**: Handles application startup and determines which page to show based on the runtime platform (`DevicePlatform.WinUI` vs. others).
+    *   **`App.xaml.cs`**: Handles application startup, platform routing, and Windows window sizing.
     *   **`MauiProgram.cs`**: Application entry point and dependency configuration.
 
 ## Building and Running
@@ -42,7 +42,7 @@ To build and run the Windows application:
 
 ```bash
 cd DartsCounter
-dotnet build -t:Run -f net9.0-windows10.0.19041.0
+dotnet build -t:Run -f net9.0-windows10.0.26100.0
 ```
 
 ### Android (Display)
@@ -56,7 +56,7 @@ dotnet build -t:Run -f net9.0-android
 
 ## Development Conventions
 
-*   **Platform-Specific Logic:** The application uses `DeviceInfo.Platform` checks (primarily in `App.xaml.cs` and `GameViewModel.cs`) to switch behavior between the Controller (Windows) and Display (Android/Mobile) roles.
-*   **Networking:** The `DartsSyncService` uses port `50001` for UDP broadcasting. Ensure firewall rules allow local network traffic on this port.
-*   **State Management:** `GameViewModel` is the source of truth. Changes here are broadcasted to listeners.
-*   **Styling:** UI is defined in XAML.
+*   **Platform-Specific Logic:** The application uses `DeviceInfo.Platform` checks to switch behavior. Windows acts as the controller and sets initial window height to screen resolution.
+*   **Turn Logic:** Each player has 3 darts per turn. A "Bust" occurs if a player scores more than their remaining points or reaches 1 without a double-out. On bust, the score reverts to the value at the start of that turn.
+*   **Networking:** The `DartsSyncService` uses port `50001` for UDP broadcasting. The state DTO includes `DartsThrown` to keep displays in sync with the turn progress.
+*   **State Management:** `GameViewModel` is the source of truth. `Player` models notify the UI of property changes.
