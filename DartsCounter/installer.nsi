@@ -41,7 +41,7 @@ Section "MainSection" SEC01
     
     ; Registry keys for uninstallation
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DartsCounter" "DisplayName" "DartsCounter"
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DartsCounter" "UninstallString" "$"$INSTDIR\Uninstall.exe$""
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DartsCounter" "UninstallString" "$\"$INSTDIR\Uninstall.exe$\""
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DartsCounter" "DisplayIcon" "$INSTDIR\DartsCounter.exe"
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\DartsCounter" "Publisher" "Monarch73"
 
