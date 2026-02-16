@@ -4,7 +4,8 @@
              xmlns:vm="clr-namespace:DartsCounter.ViewModels"
              xmlns:converters="clr-namespace:DartsCounter.Converters"
              x:Class="DartsCounter.Views.ControllerPage"
-             Title="Darts Controller (Windows)">
+             Title="Darts Controller (Windows)"
+             NavigationPage.HasBackButton="False">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -14,18 +15,8 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ContentPage.BindingContext>
-        <vm:GameViewModel />
-    </ContentPage.BindingContext>
-
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20">
-
-            <!-- Player Setup Section -->
-            <HorizontalStackLayout Spacing="10">
-                <Entry x:Name="PlayerNameEntry" Placeholder="Player Name" WidthRequest="200" />
-                <Button Text="Add Player" Command="{Binding AddPlayerCommand}" CommandParameter="{Binding Source={x:Reference PlayerNameEntry}, Path=Text}" />
-            </HorizontalStackLayout>
 
             <!-- Current Player Info -->
             <Label Text="{Binding CurrentPlayer.Name, StringFormat='Current Player: {0}'}" FontSize="24" FontAttributes="Bold" />

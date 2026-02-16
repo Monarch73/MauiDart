@@ -11,7 +11,7 @@ public partial class App : Application
 	{
 		if (DeviceInfo.Platform == DevicePlatform.WinUI)
 		{
-			var window = new Window(new NavigationPage(new Views.ControllerPage()));
+			var window = new Window(new NavigationPage(new Views.SetupPlayers()));
 			
 			// Set height to full screen resolution height
 			var displayInfo = DeviceDisplay.Current.MainDisplayInfo;

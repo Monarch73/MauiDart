@@ -53,9 +53,12 @@ jobs:
           mkdir -p build-artifacts/windows
           mkdir -p build-artifacts/android
 
-      - name: Copy Windows binaries
+      - name: Build NSIS Installer
+        shell: pwsh
+        working-directory: DartsCounter
         run: |
-          xcopy "DartsCounter\bin\Release\net9.0-windows10.0.26100.0\win10-x64\publish\*" "build-artifacts\windows\" /E /I
+          makensis installer.nsi
+          Move-Item DartsCounterInstaller.exe ../build-artifacts/
 
       - name: Copy Android binaries
         run: |
@@ -77,7 +80,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload Zip Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -86,3 +89,13 @@ jobs:
           asset_path: ./DartsCounter-${{ github.event.inputs.version }}.zip
           asset_name: DartsCounter-${{ github.event.inputs.version }}.zip
           asset_content_type: application/zip
+
+      - name: Upload Installer Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build-artifacts/DartsCounterInstaller.exe
+          asset_name: DartsCounterInstaller-${{ github.event.inputs.version }}.exe
+          asset_content_type: application/octet-stream

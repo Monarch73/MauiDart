@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DartsCounter.ViewModels"
+             x:Class="DartsCounter.Views.SetupPlayers"
+             Title="Setup Players">
+
+    <ContentPage.BindingContext>
+        <vm:GameViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+            <Label Text="Darts Match Setup" FontSize="32" FontAttributes="Bold" HorizontalOptions="Center" />
+
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Add Players (Max 8)" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <Entry x:Name="PlayerNameEntry" Placeholder="Player Name" WidthRequest="300" 
+                           Completed="OnAddPlayerClicked" />
+                    <Button Text="Add" Clicked="OnAddPlayerClicked" WidthRequest="100" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <Label Text="Player List" FontSize="18" FontAttributes="Bold" />
+            <CollectionView ItemsSource="{Binding Players}" MinimumHeightRequest="200">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, Auto" Padding="10">
+                            <Label Text="{Binding Name}" FontSize="18" VerticalOptions="Center" />
+                            <!-- Optional: Add delete button here if needed -->
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="No players added yet." HorizontalOptions="Center" VerticalOptions="Center" Margin="20" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <Button Text="Start Match" 
+                    Clicked="OnStartMatchClicked" 
+                    FontSize="24" 
+                    Padding="20"
+                    BackgroundColor="Green" 
+                    TextColor="White"
+                    HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
