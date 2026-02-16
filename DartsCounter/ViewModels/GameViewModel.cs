@@ -31,6 +31,7 @@ namespace DartsCounter.ViewModels
             set { _dartsThrown = value; OnPropertyChanged(); }
         }
 
+        private int _pointsThisTurn = 0;
         private int _scoreAtStartOfTurn;
 
         private string _statusMessage = "Welcome!";
@@ -78,6 +79,7 @@ namespace DartsCounter.ViewModels
             Players.Clear();
             CurrentPlayer = null;
             DartsThrown = 0;
+            _pointsThisTurn = 0;
             _scoreAtStartOfTurn = 501;
             StatusMessage = "Game Reset. Add players.";
             Broadcast();
@@ -129,6 +131,7 @@ namespace DartsCounter.ViewModels
                 {
                     CurrentPlayer = player;
                     _scoreAtStartOfTurn = player.CurrentScore;
+                    _pointsThisTurn = 0;
                 }
                 Broadcast();
             }
@@ -140,6 +143,7 @@ namespace DartsCounter.ViewModels
 
             DartsThrown++;
             int points = value * Multiplier;
+            _pointsThisTurn += points;
             int newScore = CurrentPlayer.CurrentScore - points;
 
             bool isBust = false;
@@ -172,10 +176,13 @@ namespace DartsCounter.ViewModels
 
             if (isWin)
             {
-                // For now, we stay on the winning player.
+                // Record final turn stats
+                CurrentPlayer.TotalPointsScored += _pointsThisTurn;
+                CurrentPlayer.TurnsPlayed++;
             }
             else if (isBust)
             {
+                _pointsThisTurn = 0;
                 CurrentPlayer.CurrentScore = _scoreAtStartOfTurn;
                 NextTurn();
             }
@@ -199,6 +206,12 @@ namespace DartsCounter.ViewModels
         private void NextTurn()
         {
             if (CurrentPlayer == null) return;
+
+            // Update stats before switching
+            CurrentPlayer.TotalPointsScored += _pointsThisTurn;
+            CurrentPlayer.TurnsPlayed++;
+            _pointsThisTurn = 0;
+
             int index = Players.IndexOf(CurrentPlayer);
             index = (index + 1) % Players.Count;
             CurrentPlayer = Players[index];

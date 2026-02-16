@@ -100,9 +100,10 @@
             <CollectionView ItemsSource="{Binding Players}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="*, Auto" Padding="10">
+                        <Grid ColumnDefinitions="*, Auto, Auto" Padding="10">
                             <Label Text="{Binding Name}" FontSize="18" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="{Binding CurrentScore}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding AverageScore, StringFormat='Avg: {0}'}" FontSize="14" VerticalOptions="Center" Margin="0,0,20,0" TextColor="Gray" />
+                            <Label Grid.Column="2" Text="{Binding CurrentScore}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
