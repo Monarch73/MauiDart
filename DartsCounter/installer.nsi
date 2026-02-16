@@ -14,10 +14,8 @@ RequestExecutionLevel user
 
 ; Interface Settings
 !define MUI_ABORTWARNING
-!define MUI_ICON "bin\Release
-et9.0-windows10.0.26100.0\win10-x64\publish\appicon.ico"
-!define MUI_UNICON "bin\Release
-et9.0-windows10.0.26100.0\win10-x64\publish\appicon.ico"
+!define MUI_ICON "bin\Release\net9.0-windows10.0.26100.0\win10-x64\publish\appicon.ico"
+!define MUI_UNICON "bin\Release\net9.0-windows10.0.26100.0\win10-x64\publish\appicon.ico"
 
 ; Pages
 !insertmacro MUI_PAGE_WELCOME
@@ -36,8 +34,7 @@ et9.0-windows10.0.26100.0\win10-x64\publish\appicon.ico"
 ; Installer Sections
 Section "MainSection" SEC01
     SetOutPath "$INSTDIR"
-    File /r "bin\Release
-et9.0-windows10.0.26100.0\win10-x64\publish\*"
+    File /r "bin\Release\net9.0-windows10.0.26100.0\win10-x64\publish\*"
     
     ; Create uninstaller
     WriteUninstaller "$INSTDIR\Uninstall.exe"

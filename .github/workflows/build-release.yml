@@ -37,8 +37,11 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore DartsCounter/DartsCounter.csproj
 
+      - name: Setup NSIS
+        uses: joncloud/setup-nsis@v1
+
       - name: Build Windows
-        run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-windows10.0.26100.0 -c Release
+        run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-windows10.0.26100.0 -c Release -r win10-x64 --self-contained
 
       - name: Build Android
         run: dotnet publish DartsCounter/DartsCounter.csproj -f net9.0-android -c Release `
@@ -49,9 +52,10 @@ jobs:
           /p:AndroidSigningKeyPass="${{ secrets.KEY_PASSWORD }}"
 
       - name: Create output directories
+        shell: pwsh
         run: |
-          mkdir -p build-artifacts/windows
-          mkdir -p build-artifacts/android
+          New-Item -Path build-artifacts/windows -ItemType Directory -Force
+          New-Item -Path build-artifacts/android -ItemType Directory -Force
 
       - name: Build NSIS Installer
         shell: pwsh
