@@ -25,14 +25,14 @@ public partial class SetupPlayers : ContentPage
 	{
 		if (ViewModel.Players.Count == 0)
 		{
-			await DisplayAlert("No Players", "Please add at least one player to start the match.", "OK");
+			await this.DisplayAlertAsync("No Players", "Please add at least one player to start the match.", "OK");
 			return;
 		}
 
 		// Navigate to ControllerPage and pass the current ViewModel
-		if (Application.Current != null)
+		if (Application.Current != null && Application.Current.Windows.Count > 0)
 		{
-			Application.Current.MainPage = new NavigationPage(new ControllerPage(ViewModel));
+			Application.Current.Windows[0].Page = new NavigationPage(new ControllerPage(ViewModel));
 		}
 	}
 }

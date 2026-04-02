@@ -19,6 +19,14 @@ namespace DartsCounter.Models
             set { _currentScore = value; OnPropertyChanged(); } 
         }
 
+        private int _lastTurn = 0;
+
+        public int LastTurn
+        {   
+            get => _lastTurn; 
+            set { _lastTurn = value; OnPropertyChanged(); }
+        }
+
         private int _totalPointsScored = 0;
         public int TotalPointsScored
         {

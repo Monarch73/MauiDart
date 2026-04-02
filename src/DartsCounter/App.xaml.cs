@@ -17,6 +17,7 @@ public partial class App : Application
 			var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
 			window.Height = displayInfo.Height / displayInfo.Density;
 			window.Y = 0; // Position at the top
+			window.Width = 600;
 
 			return window;
 		}

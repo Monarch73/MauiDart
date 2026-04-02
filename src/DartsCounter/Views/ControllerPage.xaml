@@ -43,8 +43,6 @@
                         Padding="5">
                     <Button Text="Triple" Command="{Binding SetMultiplierCommand}" CommandParameter="3" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=3}" Padding="10" />
                 </Border>
-
-                <Button Text="Reset" Command="{Binding ResetCommand}" BackgroundColor="Red" Padding="10" />
             </HorizontalStackLayout>
 
             <!-- Numbers Grid 1-20 -->
@@ -82,7 +80,7 @@
             <!-- Special Score Options -->
             <Label Text="Special" FontSize="18" FontAttributes="Bold" />
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Button Text="Bull" Command="{Binding ScoreCommand}" CommandParameter="25" Padding="15,10" />
+                <Button Text="Bull" IsEnabled="{Binding IsNotTriple}" Command="{Binding ScoreCommand}" CommandParameter="25" Padding="15,10" StyleClass="{Binding Multiplier,Converter={StaticResource BullseyeStyleConverter} }" />
                 <Button Text="0 (Miss)" Command="{Binding ScoreCommand}" CommandParameter="0" Padding="15,10" />
             </HorizontalStackLayout>
 
@@ -91,10 +89,11 @@
             <CollectionView ItemsSource="{Binding Players}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="*, Auto, Auto" Padding="10">
+                        <Grid ColumnDefinitions="*, Auto, Auto, Auto" Padding="10">
                             <Label Text="{Binding Name}" FontSize="18" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="{Binding AverageScore, StringFormat='Avg: {0}'}" FontSize="14" VerticalOptions="Center" Margin="0,0,20,0" TextColor="Gray" />
-                            <Label Grid.Column="2" Text="{Binding CurrentScore}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding LastTurn, StringFormat='Last Turn: {0}'}" FontSize="14" VerticalOptions="Center" Margin="20,0,20,0" TextColor="Gray" />
+                            <Label Grid.Column="2" Text="{Binding AverageScore, StringFormat='Avg: {0}'}" FontSize="14" VerticalOptions="Center" Margin="0,0,20,0" TextColor="Gray" />
+                            <Label Grid.Column="3" Text="{Binding CurrentScore}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

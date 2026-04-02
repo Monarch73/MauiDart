@@ -21,8 +21,14 @@ namespace DartsCounter.ViewModels
         public int Multiplier
         {
             get => _multiplier;
-            set { _multiplier = value; OnPropertyChanged(); }
+            set { 
+                _multiplier = value; 
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsNotTriple));
+            }
         }
+
+        public bool IsNotTriple => Multiplier != 3;
 
         private int _dartsThrown = 0;
         public int DartsThrown
@@ -66,23 +72,10 @@ namespace DartsCounter.ViewModels
                     System.Diagnostics.Debug.WriteLine($"Multiplier set to: {multiplier}");
                 }
             });
-            ResetCommand = new Command(ResetGame);
-
             if (DeviceInfo.Platform != DevicePlatform.WinUI)
             {
                 _syncService.StartListening(OnStateReceived);
             }
-        }
-
-        private void ResetGame()
-        {
-            Players.Clear();
-            CurrentPlayer = null;
-            DartsThrown = 0;
-            _pointsThisTurn = 0;
-            _scoreAtStartOfTurn = 501;
-            StatusMessage = "Game Reset. Add players.";
-            Broadcast();
         }
 
         private void OnStateReceived(string json)
@@ -141,6 +134,9 @@ namespace DartsCounter.ViewModels
         {
             if (CurrentPlayer == null) return;
 
+            // ignore triple bull as it's not a valid score
+            if (value == 25 && Multiplier == 3) return;
+
             DartsThrown++;
             int points = value * Multiplier;
             _pointsThisTurn += points;
@@ -188,6 +184,7 @@ namespace DartsCounter.ViewModels
             }
             else if (DartsThrown == 3)
             {
+                CurrentPlayer.LastTurn = _pointsThisTurn;
                 NextTurn();
             }
             
