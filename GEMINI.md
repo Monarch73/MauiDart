@@ -1,8 +1,8 @@
-# DartsCounter Project
+# DartMaster Project
 
 ## Overview
 
-**DartsCounter** is a cross-platform .NET MAUI application designed to manage and display scores for a game of 501 Double-Out Darts. The system is architected to run on two distinct platforms with specialized roles:
+**DartMaster** is a cross-platform .NET MAUI application designed to manage and display scores for a game of 501 Double-Out Darts. The system is architected to run on two distinct platforms with specialized roles:
 
 *   **Windows Application:** Acts as the **Controller**. It provides a detailed interface for inputting scores, managing players, and controlling the game flow.
 *   **Android Application:** Acts as the **Display**. It serves as a passive, high-visibility scoreboard optimized for viewing by players and spectators.
@@ -15,6 +15,7 @@ The two applications synchronize game state in real-time using UDP broadcasting 
     *   **Bust Conditions:** Occur if a player scores more than their remaining points, reaches a final score of 1, or reaches 0 without a double. On bust, the score reverts to the value at the start of that turn.
     *   **Valid Finish:** A player wins by reaching exactly 0 points with a **double multiplier**.
 *   **Real-time Synchronization:** Uses `DartsSyncService` to broadcast game state via UDP (port 50001) from the Windows controller to Android displays.
+*   **Screen Wake Lock:** Automatically keeps the device screen active while the application is in the foreground, ensuring the scoreboard remains visible throughout the match.
 *   **Multi-Platform UI:**
     *   **Controller (Windows):** 
         *   **Setup Phase:** Starts on `SetupPlayers.xaml` to manage the player list (max 8).
@@ -25,7 +26,7 @@ The two applications synchronize game state in real-time using UDP broadcasting 
 
 The solution follows a standard MVVM (Model-View-ViewModel) architecture:
 
-*   **`DartsCounter/`**: Root project directory.
+*   **`src/DartMaster/`**: Root project directory.
     *   **`Models/`**: 
         *   `Player.cs`: Implements `INotifyPropertyChanged`. Tracks `Name`, `CurrentScore`, `TotalPointsScored`, `TurnsPlayed`, `LegsWon`, and `ThrowHistory`. Calculates `AverageScore` (PPR).
     *   **`ViewModels/`**: 
@@ -47,19 +48,21 @@ The solution follows a standard MVVM (Model-View-ViewModel) architecture:
 
 ## Building and Running
 
-Ensure you have the .NET 9.0 SDK and the necessary MAUI workloads installed (`maui-android`, `maui-windows`).
+Ensure you have the .NET 10.0 SDK and the necessary MAUI workloads installed (`maui-android`, `maui-windows`).
 
 ### Windows (Controller)
 ```bash
-cd DartsCounter
-dotnet build -t:Run -f net9.0-windows10.0.26100.0
+dotnet build src/DartMaster/DartMaster.csproj -t:Run -f net10.0-windows10.0.26100.0
 ```
 
 ### Android (Display)
 ```bash
-cd DartsCounter
-dotnet build -t:Run -f net9.0-android
+dotnet build src/DartMaster/DartMaster.csproj -t:Run -f net10.0-android
 ```
+
+## Technical Notes
+
+*   **Android Font Assets:** To ensure compatibility with physical Android devices, font assets in `Resources/Fonts` must use all-lowercase filenames with no special characters (e.g., `opensansregular.ttf`).
 
 ## Current Limitations & WIP
 

@@ -1,0 +1,37 @@
+﻿namespace DartMaster;
+
+public partial class App : Application
+{
+	public App()
+	{
+		InitializeComponent();
+	}
+
+	protected override void OnStart()
+	{
+		base.OnStart();
+		// Keep screen on for Android (Scoreboard) and Controller (Windows)
+		// We do this in OnStart to ensure the Platform Activity is initialized on Android
+		DeviceDisplay.Current.KeepScreenOn = true;
+	}
+
+	protected override Window CreateWindow(IActivationState? activationState)
+	{
+		if (DeviceInfo.Platform == DevicePlatform.WinUI)
+		{
+			var window = new Window(new NavigationPage(new Views.SetupPlayers()));
+			
+			// Set height to full screen resolution height
+			var displayInfo = DeviceDisplay.Current.MainDisplayInfo;
+			window.Height = displayInfo.Height / displayInfo.Density;
+			window.Y = 0; // Position at the top
+			window.Width = 600;
+
+			return window;
+		}
+		else
+		{
+			return new Window(new Views.DisplayPage());
+		}
+	}
+}

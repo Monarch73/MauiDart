@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DartMaster.ViewModels"
+             xmlns:converters="clr-namespace:DartMaster.Converters"
+             x:Class="DartMaster.Views.ControllerPage"
+             Title="Darts Controller (Windows)"
+             NavigationPage.HasBackButton="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:MultiplierToColorConverter x:Key="MultiplierToColorConverter" />
+            <converters:MultiplierToBorderThicknessConverter x:Key="MultiplierToBorderThicknessConverter" />
+            <converters:MultiplierToBorderColorConverter x:Key="MultiplierToBorderColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+
+            <!-- Current Player Info -->
+            <Label Text="{Binding CurrentPlayer.Name, StringFormat='Current Player: {0}'}" FontSize="24" FontAttributes="Bold" />
+            <Label Text="{Binding CurrentPlayer.CurrentScore, StringFormat='Remaining: {0}'}" FontSize="32" />
+            <Label Text="{Binding DartsThrown, StringFormat='Darts Thrown: {0}/3'}" FontSize="18" TextColor="LightGreen" />
+            <Label Text="{Binding StatusMessage}" FontSize="18" TextColor="Gray" />
+
+            <!-- Multiplier and Reset Controls -->
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Border StrokeThickness="{Binding Multiplier, Converter={StaticResource MultiplierToBorderThicknessConverter}, ConverterParameter=1}" 
+                        Stroke="{Binding Multiplier, Converter={StaticResource MultiplierToBorderColorConverter}, ConverterParameter=1}"
+                        Padding="5">
+                    <Button Text="Single" Command="{Binding SetMultiplierCommand}" CommandParameter="1" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=1}" Padding="10" />
+                </Border>
+
+                <Border StrokeThickness="{Binding Multiplier, Converter={StaticResource MultiplierToBorderThicknessConverter}, ConverterParameter=2}" 
+                        Stroke="{Binding Multiplier, Converter={StaticResource MultiplierToBorderColorConverter}, ConverterParameter=2}"
+                        Padding="5">
+                    <Button Text="Double" Command="{Binding SetMultiplierCommand}" CommandParameter="2" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=2}" Padding="10" />
+                </Border>
+
+                <Border StrokeThickness="{Binding Multiplier, Converter={StaticResource MultiplierToBorderThicknessConverter}, ConverterParameter=3}" 
+                        Stroke="{Binding Multiplier, Converter={StaticResource MultiplierToBorderColorConverter}, ConverterParameter=3}"
+                        Padding="5">
+                    <Button Text="Triple" Command="{Binding SetMultiplierCommand}" CommandParameter="3" BackgroundColor="{Binding Multiplier, Converter={StaticResource MultiplierToColorConverter}, ConverterParameter=3}" Padding="10" />
+                </Border>
+            </HorizontalStackLayout>
+
+            <!-- Numbers Grid 1-20 -->
+            <Label Text="Score" FontSize="18" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="*,*,*,*" RowSpacing="8" ColumnSpacing="8">
+                <!-- Row 1: 1-5 -->
+                <Button Grid.Row="0" Grid.Column="0" Text="1" Command="{Binding ScoreCommand}" CommandParameter="1" />
+                <Button Grid.Row="0" Grid.Column="1" Text="2" Command="{Binding ScoreCommand}" CommandParameter="2" />
+                <Button Grid.Row="0" Grid.Column="2" Text="3" Command="{Binding ScoreCommand}" CommandParameter="3" />
+                <Button Grid.Row="0" Grid.Column="3" Text="4" Command="{Binding ScoreCommand}" CommandParameter="4" />
+                <Button Grid.Row="0" Grid.Column="4" Text="5" Command="{Binding ScoreCommand}" CommandParameter="5" />
+
+                <!-- Row 2: 6-10 -->
+                <Button Grid.Row="1" Grid.Column="0" Text="6" Command="{Binding ScoreCommand}" CommandParameter="6" />
+                <Button Grid.Row="1" Grid.Column="1" Text="7" Command="{Binding ScoreCommand}" CommandParameter="7" />
+                <Button Grid.Row="1" Grid.Column="2" Text="8" Command="{Binding ScoreCommand}" CommandParameter="8" />
+                <Button Grid.Row="1" Grid.Column="3" Text="9" Command="{Binding ScoreCommand}" CommandParameter="9" />
+                <Button Grid.Row="1" Grid.Column="4" Text="10" Command="{Binding ScoreCommand}" CommandParameter="10" />
+
+                <!-- Row 3: 11-15 -->
+                <Button Grid.Row="2" Grid.Column="0" Text="11" Command="{Binding ScoreCommand}" CommandParameter="11" />
+                <Button Grid.Row="2" Grid.Column="1" Text="12" Command="{Binding ScoreCommand}" CommandParameter="12" />
+                <Button Grid.Row="2" Grid.Column="2" Text="13" Command="{Binding ScoreCommand}" CommandParameter="13" />
+                <Button Grid.Row="2" Grid.Column="3" Text="14" Command="{Binding ScoreCommand}" CommandParameter="14" />
+                <Button Grid.Row="2" Grid.Column="4" Text="15" Command="{Binding ScoreCommand}" CommandParameter="15" />
+
+                <!-- Row 4: 16-20 -->
+                <Button Grid.Row="3" Grid.Column="0" Text="16" Command="{Binding ScoreCommand}" CommandParameter="16" />
+                <Button Grid.Row="3" Grid.Column="1" Text="17" Command="{Binding ScoreCommand}" CommandParameter="17" />
+                <Button Grid.Row="3" Grid.Column="2" Text="18" Command="{Binding ScoreCommand}" CommandParameter="18" />
+                <Button Grid.Row="3" Grid.Column="3" Text="19" Command="{Binding ScoreCommand}" CommandParameter="19" />
+                <Button Grid.Row="3" Grid.Column="4" Text="20" Command="{Binding ScoreCommand}" CommandParameter="20" />
+            </Grid>
+
+            <!-- Special Score Options -->
+            <Label Text="Special" FontSize="18" FontAttributes="Bold" />
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Button Text="Bull" IsEnabled="{Binding IsNotTriple}" Command="{Binding ScoreCommand}" CommandParameter="25" Padding="15,10" StyleClass="{Binding Multiplier,Converter={StaticResource BullseyeStyleConverter} }" />
+                <Button Text="0 (Miss)" Command="{Binding ScoreCommand}" CommandParameter="0" Padding="15,10" />
+            </HorizontalStackLayout>
+
+            <!-- Player List / Summary -->
+            <Label Text="Players" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0" />
+            <CollectionView ItemsSource="{Binding Players}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, Auto, Auto, Auto" Padding="10">
+                            <Label Text="{Binding Name}" FontSize="18" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding LastTurn, StringFormat='Last Turn: {0}'}" FontSize="14" VerticalOptions="Center" Margin="20,0,20,0" TextColor="Gray" />
+                            <Label Grid.Column="2" Text="{Binding AverageScore, StringFormat='Avg: {0}'}" FontSize="14" VerticalOptions="Center" Margin="0,0,20,0" TextColor="Gray" />
+                            <Label Grid.Column="3" Text="{Binding CurrentScore}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
